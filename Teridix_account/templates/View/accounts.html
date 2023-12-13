@@ -1,0 +1,134 @@
+{% extends 'base_account.html' %}
+{% load static %}
+
+
+
+{% block body %}
+    <div class="page-title dashboard">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="page-title-content">
+                        <p>خوش آمدید،
+                            <span>
+                                {% if request.user.get_full_name %}
+                                    {{ request.user.get_full_name }}
+                                {% else %}
+                                    {{ request.user.username }}
+                                {% endif %}
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-body">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xl-4 col-lg-4 col-md-6">
+                    <div class="card profile_card">
+                        <div class="card-body">
+                            <div class="media">
+                                {% if request.user.image %}
+                                    <img class="mr-3 rounded-circle mr-0 mr-sm-3" src="{{ request.user.image.url }}" width="60"height="60" alt="">
+                                {% else %}
+                                    <img class="mr-3 rounded-circle mr-0 mr-sm-3" src="{% static 'images/profile/2.png' %}" width="60"height="60" alt="">
+                                {% endif %}
+                                <div class="media-body">
+                                    <h4 class="mb-2">{{ request.user.get_full_name }}</h4>
+                                    <p class="mb-1"> <span><i class="fa fa-envelope mr-2 text-primary"></i></span>
+                                        {{ request.user.email }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card">
+                        <div class="card-header border-0">
+                            <h4 class="card-title"> کلیه پست ها </h4>
+                        </div>
+                        {% if posts %}
+                            <div class="card-body pt-0">
+                                <div class="transaction-table">
+                                    <div class="table-responsive">
+                                        <table class="table mb-0 table-responsive-sm">
+                                            <tbody>
+                                                {% for p in posts %}
+                                                    <tr>
+                                                    
+                                                        <td>
+                                                            {{ p.title }} 
+                                                        </td>
+                                                        <td>
+                                                            <img src="{{ p.image.url }}" width="100" alt=""> 
+                                                        </td>
+                                                        <td>
+                                                            #{{ p.categories.all|join:'# ' }}
+                                                        </td>
+                                                        <td class="text-danger">{{ p.author.get_full_name }}</td>
+                                                        <td>{{ p.create }}</td>
+                                                        <td>
+                                                            {% if p.status == 'T' %}
+                                                            <div class="verify">
+                                                                <div class="verified">
+                                                                    <span><i class="la la-check text-success"></i></span>
+                                                                    <a href="#" class="text-success">منتشر شده</a>
+                                                                </div>
+                                                            </div>
+                                                            {% else %}
+                                                            <div class="verify">
+                                                                <div class="not-verify">
+                                                                    <span><i class="la la-close text-danger"></i></span>
+                                                                    <a href="#" class="text-danger">منتشر نشده</a>
+                                                                </div>
+                                                            </div>
+                                                            {% endif %}
+                                                        </td>
+                                                        {% if request.user.is_superuser %}
+                                                            <td>
+                                                                <div class="edit-option">
+                                                                    <a href="{{ p.get_absolute_url_blog_single }}"><i class="fas fa-eye mx-2"></i></a>
+                                                                    <a href="{% url 'Teridix_account:update' p.pk %}"><i class="fas fa-edit mx-2"></i></a>
+                                                                    <a href="{% url 'Teridix_account:delete' p.pk %}"><i class="fa fa-trash text-danger mx-2"></i></a>
+                                                                </div>
+                                                            </td>
+                                                        {% elif p.status == 'F' and p.author %}
+                                                            <td>
+                                                                <div class="edit-option">
+                                                                    <a href="{% url 'Teridix_account:update' p.pk %}"><i class="fas fa-edit mx-2"></i></a>
+                                                                </div>
+                                                            </td>
+                                                        {% else %}
+                                                            <td>
+                                                                <div class="edit-option">
+                                                                    <a target="_blanck" href="{{ p.get_absolute_url_blog_single }}"><i class="fas fa-eye mx-2"></i></a>
+                                                                </div>
+                                                            </td>
+                                                        {% endif %}
+
+                                                    </tr>
+                                                {% endfor %}
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="row d-flex justify-content-center">
+                                <span class="col-6 alert bg-danger text-light text-center">هیچ پستی وجود ندارد</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

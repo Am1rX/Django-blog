@@ -1,0 +1,55 @@
+{% extends 'View/base_authenticated.html' %}
+{% load static %}
+
+{% block body %}
+    <div id="main-wrapper">
+        <div class="authincation section-padding">
+            <div class="container h-100">
+                <div class="row justify-content-center h-100 align-items-center">
+                    <div class="col-xl-5 col-md-6">
+                            <div class="mini-logo text-center my-5">
+                                <img src="{% static 'images/logo.png' %}" alt="">
+                            </div>
+                        <div class="auth-form card">
+                            <div class="card-header justify-content-center">
+                                <h4 class="card-title">ورود</h4>
+                            </div>
+                            <div class="card-body">
+                                <form method="POST" name="myform" class="signin_validate">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        {{ form.UserName }}
+                                        {% for e in form.UserName.errors %}
+                                            <span class="text-danger">{{ e }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="form-group">
+                                        {{ form.Password }}
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-success btn-block">ورود</button>
+                                    </div>
+                                    <div class="form-row d-flex justify-content-between mt-4 mb-2">
+                                        <div class="form-group mb-0">
+                                            <label class="toggle">
+                                                <input class="toggle-checkbox" type="checkbox">
+                                                <span class="toggle-switch"></span>
+                                                <span class="toggle-label">مرا به خاطر بسپار</span>
+                                            </label>
+                                        </div>
+                                        <div class="form-group mb-0">
+                                            <a href="{% url 'PRE' %}">فراموشی رمز؟</a>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="new-account mt-3">
+                                    <p>حساب ندارید؟ <a class="text-primary" href="{% url 'signup' %}">ثبت نام</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

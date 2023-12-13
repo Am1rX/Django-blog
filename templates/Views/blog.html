@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load static %}
+<!-- {% load ratings %} -->
+
+
+
+{% block body %}
+
+<div class="blog section-padding border-0">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-9 col-lg-9">
+                <div class="row">
+                    {% for p in posts %}
+                        <div class="col-xl-6 col-lg-6 col-md-6">
+                            <div class="blog-grid">
+                                <div class="card">
+                                    <img class="img-fluid" src="{{ p.image.url }}" alt="">
+                                    <div class="card-body">
+                                        <a href="{{ p.get_absolute_url_blog_single }}">
+                                            <h4 class="card-title">{{ p.title }}</h4>
+                                        </a>
+                                        <p class="card-text">{{ p.description|truncatewords:15|safe}}</p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="meta-info">
+                                            <a href="#" class="author"><img src="{% static 'assets\images\avatar\8.jpg' %}" alt="">
+                                                {% if p.author.is_superuser %}
+                                                مدیر
+                                                {% else %}
+                                                    {{ p.author.get_full_name }}
+                                                {% endif %}
+                                                </a>
+                                            <a href="#" class="post-date"><i class="la la-calendar"></i>{{ p.create }}</a>
+                                            <!-- {% ratings p %} -->
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% if posts %}
+                    {% if posts.count > 6 %}
+                        <nav aria-label="Page navigation example">
+                            <div class="row d-flex mt-5 justify-content-center">
+                                <ul class="pagination" dir="rtl">
+                                    {% for page in posts.paginator.page_range %}
+                                        {% if page == posts.number %}
+                                            <li class="page-item"><a class="page-link bg-primary text-light" href="?page={{ page }}">{{ page }}</a></li>
+                                        {% else %}
+                                            <li class="page-item"><a class="page-link bg-primary text-light" href="?page={{ page }}">{{ page }}</a></li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </nav>
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div class="col-xl-3 col-lg-3">
+                <div class="blog-sidebar">
+                    <div class="widget-search">
+                        {% include 'Views/search.html' %}
+                    </div>
+                    <div class="widget-recent-post">
+                        <h3 class="post-title">پست اخیر </h3>
+                        <ul class="list-unstyled">
+                            {% for b in bOrder %}
+                                <li class="media">
+                                    <img src="{{ b.image.url }}" class="mr-3" alt="...">
+                                    <div class="media-body">
+                                        <h5 class="mt-0 mb-1"><a class="text-dark" href="{{ b.get_absolute_url_blog_single }}">{{ b.title }}</a></h5>
+                                        <div class="meta-info">
+                                            <a href="#"><i class="la la-user"></i>
+                                            {% if b.author.is_superuser %}
+                                                مدیر
+                                            {% else %}
+                                                {{ b.author.get_full_name }}
+                                            {% endif %}
+                                            </a>
+                                            <a href="#"><i class="la la-calendar"></i>{{ b.create }}</a>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                           
+                        </ul>
+                    </div>
+                    <div class="widget-category">
+                        <h3 class="widget-title"> دسته بندی ها </h3>
+                        <ul class="list-group">
+                            {% for c in cc %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                   <a href="/blog/{{ c.category_slug }}/">{{ c.category_name }}</a>
+                                    <span class="badge badge-primary">{{ c.blogs_count }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <!-- <div class="widget-tag">
+                        <h3 class="widget-title">تگ ها</h3>
+                        <div class="tag-group">
+                            <a href="#">تریدیکس</a>
+                            <a href="#">آهنگ</a>
+                            <a href="#">عنوان</a>
+                            <a href="#">خوب</a>
+                            <a href="#"> داشبورد</a>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+{% endblock %}
